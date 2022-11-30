@@ -1,0 +1,161 @@
+<div class="container">
+  <div class="mt-4">
+    <div>
+      <a href="/me/stored/posts">Return to My Post</a>
+      <h3>Post In Trash</h3>
+    </div>
+
+    <table class="table mt-4">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Post Title</th>
+          <th scope="col">Author</th>
+          <th scope="col" colspan="2">Delete Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each posts}}
+        <tr>
+          <td>{{sum @index 1}}</td>
+          <td>{{this.title}}</td>
+          <td>{{this.author}}</td>
+          <td>{{this.deletedAt}}</td>
+          <td>
+            <a href="" class="btn btn-link btn-restore" data-id="{{this._id}}">Restore</a>
+            <a href="" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#deletepostmodal"
+              data-id="{{this._id}}" data-image="{{this.image}}" data-title="{{this.title}}"
+              data-author="{{this.author}}" data-date="{{this.deletedAt}}">Permanently Delete</a>
+          </td>
+        </tr>
+        {{else}}
+        <tr>
+          <td colspan="5" class="text-center">
+            Trash is empty.
+            <a href="/me/stored/posts">Return to My Post</a>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+  {{!-- Confirm delete post --}}
+  <div class="modal fade" id="deletepostmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Permanently Delete</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>This action cannot be undone. Do you still want to permanently delete this post</p>
+          <div class="modal-wrapper">
+            <div class="modal-image-wrapper">
+              <img id="modal-image" src="" alt="">
+            </div>
+            <div class="modal-info">
+              <p id="modal-title"></p>
+              <p id="modal-author"></p>
+              <p id="modal-date"></p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btn-delete-post" class="btn btn-primary">Permanently Delete</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form name="delete-post-form" method="POST"></form>
+<form name="restore-post-form" method="POST"></form>
+
+<style>
+  td {
+    line-height: 36px;
+  }
+
+  .modal-body {}
+
+  .modal-wrapper {
+    display: flex;
+    margin-top: 20px;
+  }
+
+  .modal-image-wrapper {
+    width: 40%;
+    overflow: hidden;
+    position: relative;
+    padding-top: 25%;
+    border-radius: 8px;
+  }
+
+  #modal-image {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .modal-info {
+    margin-left: 16px;
+    width: 60%;
+  }
+
+  #modal-title {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+
+  #modal-author {
+    margin-bottom: 0.25rem;
+    font-style: italic;
+  }
+
+  #modal-date {
+    margin-bottom: 0.25rem;
+    font-style: italic;
+  }
+</style>
+
+<script>
+  var postId;
+  var deleteForm = document.forms['delete-post-form'];
+  var restoreForm = document.forms['restore-post-form'];
+  var btnDeletepost = document.getElementById('btn-delete-post');
+  var restoreBtn = $('.btn-restore');
+
+  var modalImage = document.getElementById('modal-image');
+  var modalTitle = document.getElementById('modal-title');
+  var modalAuthor = document.getElementById('modal-author');
+  var modalDate = document.getElementById('modal-date');
+
+  // When dialog confirm clicked
+  $('#deletepostmodal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    modalImage.src = button.data('image');
+    modalTitle.innerHTML = button.data('title');
+    modalAuthor.innerHTML = button.data('author');
+    modalDate.innerHTML = button.data('date');
+    postId = button.data('id');
+  });
+
+  // When delete post btn clicked
+  btnDeletepost.onclick = function () {
+    deleteForm.action = '/post/' + postId + '/force?_method=DELETE';
+    deleteForm.submit();
+  }
+
+  // Restore btn clicked
+  restoreBtn.click(function (e) {
+    e.preventDefault();
+
+    var postId = $(this).data('id');
+    restoreForm.action = '/post/' + postId + '/restore?_method=PATCH';
+    restoreForm.submit();
+  });
+</script>

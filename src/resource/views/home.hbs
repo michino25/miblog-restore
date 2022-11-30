@@ -1,1 +1,83 @@
-<h1>Home Page</h1>
+<div class="container">
+
+    <h1>Home Page</h1>
+
+    <div class="mt-16">
+        <div class="row g-4">
+
+            {{#each posts}}
+            <div class="col-6 col-lg-3">
+                <div class="card">
+                    <a class="card-link" href="/post/{{this.slug}}">
+                        <div class="img-wrapper">
+                            <img src="{{this.image}}" class="card-img-top" alt="...">
+                        </div>
+                    </a>
+                    <div class="card-body">
+                        <a class="card-link" href="/post/{{this.slug}}">
+                            <h5 class="card-title">{{this.title}}</h5>
+                        </a>
+                        <p class="card-text">{{this.body}}</p>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .card-link {
+        text-decoration: none;
+    }
+
+    .img-wrapper {
+        overflow: hidden;
+        position: relative;
+        padding-top: 65%;
+    }
+
+    .card-img-top {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scale(1);
+        transform-origin: center center;
+        transition: all linear 0.2s;
+    }
+
+    .card-title {
+        color: var(--bs-body-color);
+        --row: 2;
+        --line-height: 1.8rem;
+        line-height: var(--line-height);
+        height: calc(var(--line-height) * var(--row));
+        overflow: hidden;
+        display: block;
+
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: var(--row);
+    }
+
+    .card-link:hover+.card-body .card-title,
+    .card-link:hover .card-title {
+        color: var(--bs-primary);
+    }
+
+    .card-text {
+        --row: 5;
+        --line-height: 1.5rem;
+        line-height: var(--line-height);
+        height: calc(var(--line-height) * var(--row));
+        overflow: hidden;
+        display: block;
+
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: var(--row);
+    }
+</style>

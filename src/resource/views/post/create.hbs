@@ -1,0 +1,70 @@
+<div class="create-post container">
+    <div class="form-wrapper">
+        <form method="POST" action="/post/store">
+            <h3>Create new post</h3>
+            <!-- Text input -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="form6Example1">Author name</label>
+                <input name="author" type="text" id="form6Example1" class="form-control" value="Huskywannafly" />
+            </div>
+
+            <!-- Text input -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="form6Example2">Post Title</label>
+                <input name="title" type="text" id="form6Example2" class="form-control" value="title here" />
+            </div>
+
+            <!-- Message input -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="form6Example3">Post Body</label>
+                <textarea name="body" class="form-control" id="form6Example3" rows="6" value="text here">text here</textarea>
+            </div>
+
+            <!-- Text input -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="form6Example4">Post Image Link</label>
+                <input name="image" type="text" id="form6Example4" class="form-control" value="image here" />
+            </div>
+
+            <!-- 2 column grid layout with text inputs for the first and last names -->
+            <div class="row mb-4">
+                <div class="col">
+                    <div class="form-outline">
+                        <label class="form-label" for="form6Example5">Post Date</label>
+                        <input name="date" type="text" id="form6Example5" class="form-control" value="Nov 29 2022" />
+                    </div>
+                </div>
+                <div class="col">
+                    <!-- Number input -->
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="form6Example6">Post Voter</label>
+                        <input name="voter" type="number" id="form6Example6" class="form-control" value="1656" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary btn-block mb-4">Create Post</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .create-post {
+        display: flex;
+        justify-content: center;
+    }
+
+    .form-wrapper {
+        width: 800px;
+    }
+
+    .form-wrapper h3 {
+        text-align: center;
+        margin-top: 16px;
+    }
+
+    .form-wrapper button {
+        width: 100%;
+    }
+</style>
