@@ -1,47 +1,67 @@
 <div class="container">
-  <div class="mt-4">
+  <form class="control-form mt-4" name="control-form" action="/post/controlform" method="post">
     <div>
       <h3>My Post</h3>
-      <a href="/me/trash/posts">Thùng rác ({{deletedCount}})</a>
     </div>
 
-    <table class="table mt-4">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Post Title</th>
-          <th scope="col">Author</th>
-          <th scope="col" colspan="2">Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each posts}}
-        <tr>
-          <td>{{sum @index 1}}</td>
-          <td>{{this.title}}</td>
-          <td>{{this.author}}</td>
-          <td>{{this.date}}</td>
-          <td>
-            <a href="/post/{{this._id}}/edit" class="btn btn-link">Modify</a>
-            <a href="" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#deletepostmodal"
-              data-id="{{this._id}}" data-image="{{this.image}}" data-title="{{this.title}}"
-              data-author="{{this.author}}" data-date="{{this.date}}">Delete</a>
-          </td>
-        </tr>
-        {{else}}
-        <tr>
-          <td colspan="5" class="text-center">
-            You don't have any post yet
-            <a href="/post/create">Post Now</a>
-          </td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
-  </div>
+    <div class="control-area">
+      <div class="control-area-left">
+        <input hidden type="checkbox" class="post-check-all" id="postcheckall" autocomplete="off">
+        <label class="label-check-all nav-btn" for="postcheckall">Select All</label>
+        <button hidden class="delete-selected-item nav-btn btn btn-link" name="action" value="delete">
+          Delete Selected Item
+        </button>
+      </div>
+      <div class="control-area-right">
+        <a class="nav-btn btn btn-link" href="/me/trash/posts">Trash [{{deletedCount}}]</a>
+      </div>
+    </div>
+
+    <div class="post-group mt-1">
+      <div class="rheader row">
+        <span class="col-0-5">#</span>
+        <span class="col-6">
+          <span>Post Title</span>
+          {{{sortable 'title' _sort}}}
+        </span>
+        <span class="col-2">
+          <span>Author</span>
+          {{{sortable 'author' _sort}}}
+        </span>
+        <span class="col-1-5">
+          <span>Date</span>
+          {{{sortable 'date' _sort}}}
+        </span>
+        <span class="col-2"></span>
+      </div>
+      {{#each posts}}
+      <input hidden type="checkbox" class="post-check" id="postcheck{{sum @index 1}}" autocomplete="off"
+        name="postIds[]" value="{{this._id}}">
+      <label class="post-row rbody row" for="postcheck{{sum @index 1}}">
+        <span class="col-0-5">{{sum @index 1}}</span>
+        <span class="col-6">{{this.title}}</span>
+        <span class="col-2">{{this.author}}</span>
+        <span class="col-1-5">{{this.date}}</span>
+        <span class="col-2">
+          <a href="/post/{{this._id}}/edit" class="btn btn-link">Modify</a>
+          <a href="" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#deletepostmodal"
+            data-id="{{this._id}}" data-image="{{this.image}}" data-title="{{this.title}}" data-author="{{this.author}}"
+            data-date="{{this.date}}">Delete</a>
+        </span>
+      </label>
+      {{else}}
+      <div class="rbody row">
+        <span class="col-12 text-center">
+          You don't have any post yet
+          <a href="/post/create">Post Now</a>
+        </span>
+      </div>
+      {{/each}}
+    </div>
+  </form>
 
   {{!-- Confirm delete post --}}
-  <div class="modal fade" id="deletepostmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="deletepostmodal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -70,20 +90,98 @@
   </div>
 </div>
 
-
 {{!-- Delete hidden form --}}
 <form name="delete-post-form" method="POST"></form>
 
 <style>
-  td {
-    line-height: 36px;
+  [class*="col"] {
+    display: flex;
+    align-items: center;
+    justify-content: unset;
   }
+
+  .control-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .control-area-left,
+  .control-area-right {
+    display: flex;
+    align-items: center;
+  }
+
+  .label-check-all {
+    color: #333;
+    padding: 4px 12px;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    user-select: none;
+  }
+
+  .delete-selected-item {
+    padding: 4px 12px;
+  }
+
+  .rheader {
+    font-weight: 700;
+  }
+
+  .rheader,
+  .rbody {
+    line-height: 42px;
+    padding: 4px 0;
+    border: 1px solid transparent;
+    border-bottom: 1px solid #eeeeee;
+    border-radius: 5px;
+  }
+
+  .rheader span,
+  .rbody span {
+    justify-content: center;
+  }
+
+  .rheader span:nth-child(2),
+  .rbody span:nth-child(2) {
+    justify-content: unset;
+  }
+
+  .nav-btn:hover,
+  .rbody:hover {
+    background-color: rgba(68, 202, 255, 0.12);
+  }
+
+  input[type=checkbox]:checked+label {
+    background-color: rgba(68, 202, 255, 0.2);
+    border: 1px solid rgba(68, 202, 255, 0.5);
+  }
+
+  input[type=checkbox]:checked+label+input[type=checkbox]:checked+label {
+    border-top: 1px solid transparent;
+  }
+
+  .sort-btn {
+    display: inline-flex;
+    margin-left: 8px;
+  }
+
+  .sort-btn .icon {
+    width: 16px;
+    height: 16px;
+  }
+
 
   .modal-body {}
 
   .modal-wrapper {
     display: flex;
     margin-top: 20px;
+  }
+
+  .btn-link,
+  .nav-btn {
+    text-decoration: none;
   }
 
   .modal-image-wrapper {
@@ -126,12 +224,18 @@
 <script>
   var postId;
   var deleteForm = document.forms['delete-post-form'];
-  var btnDeletePost = document.getElementById('btn-delete-post');
-  var modalImage = document.getElementById('modal-image');
-  var modalTitle = document.getElementById('modal-title');
-  var modalAuthor = document.getElementById('modal-author');
-  var modalDate = document.getElementById('modal-date');
+  var btnDeletePost = $('#btn-delete-post');
 
+  var modalImage = $('#modal-image');
+  var modalTitle = $('#modal-title');
+  var modalAuthor = $('#modal-author');
+  var modalDate = $('#modal-date');
+
+  var checkboxAll = $('#postcheckall')
+  var postItemCheckbox = $('input[name="postIds[]"]')
+  var deleteSelectedBtn = $('.delete-selected-item')
+
+  var controlForm = $('form.control-form')
   // When dialog confirm clicked
   $('#deletepostmodal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget);
@@ -147,4 +251,19 @@
     deleteForm.action = '/post/' + postId + '?_method=DELETE';
     deleteForm.submit();
   }
+
+  checkboxAll.change(function () {
+    var isCheckedAll = $(this).prop('checked')
+    postItemCheckbox.prop('checked', isCheckedAll)
+    deleteSelectedBtn.prop('hidden', !isCheckedAll)
+  })
+
+  postItemCheckbox.change(() => {
+    var itemChecked = $('input[name="postIds[]"]:checked').length
+    var isCheckedAll = postItemCheckbox.length === itemChecked
+    checkboxAll.prop('checked', isCheckedAll)
+
+    var noSelected = itemChecked == 0
+    deleteSelectedBtn.prop('hidden', noSelected)
+  })
 </script>

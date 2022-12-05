@@ -5,6 +5,7 @@ const postController = require('../app/controllers/PostController');
 
 router.get('/create', postController.create);
 router.post('/store', postController.store);
+router.post('/controlform', postController.controlForm);
 router.put('/:id', postController.update);
 router.patch('/:id/restore', postController.restore);
 router.get('/:id/edit', postController.edit);

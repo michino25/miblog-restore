@@ -4,7 +4,7 @@ const { multipleMongooseObject } = require('../../tools/mongoose');
 class MeController {
     // [GET] /me/stored/post
     storedPosts(req, res, next) {
-        Promise.all([Post.find({}), Post.countDocumentsDeleted()])
+        Promise.all([Post.find({}).sortable(req), Post.countDocumentsDeleted()])
             .then(([posts, deletedCount]) =>
                 res.render('me/stored-posts', {
                     deletedCount,

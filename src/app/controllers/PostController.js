@@ -59,11 +59,24 @@ class PostController {
             .catch(next);
     }
 
-    // [DELETE] /courses/:id/force
+    // [DELETE] /post/:id/force
     forceDestroy(req, res, next) {
         Post.deleteOne({ _id: req.params.id })
             .then(() => res.redirect('back'))
             .catch(next);
+    }
+
+    // [POST] /post/controlform
+    controlForm(req, res, next) {
+        switch (req.body.action) {
+            case 'delete':
+                Post.delete({ _id: { $in: req.body.postIds } })
+                    .then(() => res.redirect('back'))
+                    .catch(next);
+                break;
+            default:
+                res.send('Action is invalid!');
+        }
     }
 }
 
